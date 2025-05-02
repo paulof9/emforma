@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Catálogo Emforma Sports - Versão 2
 
-## Getting Started
+Este repositório é uma versão aprimorada do projeto original [Catálogo Emforma Sports](https://github.com/paulof9/catalog). Ele traz melhorias em ferramentas, código e interface para atender melhor às necessidades da loja **Emforma Sports**, localizada em Piúma - ES, especializada em artigos esportivos.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📋 Funcionalidades
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Catálogo de Produtos**: Exibição de produtos esportivos com imagens, descrições e preços.
+- **Busca de Produtos**: Campo de busca para filtrar produtos por nome.
+- **Carrinho de Compras**: Adicione produtos ao carrinho e veja o total.
+- **Integração com WhatsApp**: Finalize a compra diretamente pelo WhatsApp, ideal para uma loja regional.
+- **Interface Responsiva**: Design adaptado para dispositivos móveis e desktops.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Melhorias Planejadas (To-Do)
 
-## Learn More
+- [ ] **Interface**: Refinar o design para melhorar a experiência do usuário.
+- [ ] **Banco de Dados**: Migrar os produtos para um banco de dados para facilitar a gestão.
+- [ ] **Seção de Login**: Implementar autenticação para clientes e administradores.
+- [ ] **Finalização do Carrinho**: Direcionar o carrinho para o WhatsApp com os produtos selecionados.
+- [ ] **Melhorias Gerais**: Otimizar o código e adicionar novas funcionalidades.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tecnologias Utilizadas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Next.js**: Framework React para renderização do lado do servidor e interface.
+- **TypeScript**: Tipagem estática para maior segurança no desenvolvimento.
+- **Tailwind CSS**: Framework CSS para estilização rápida e responsiva.
+- **React Icons**: Biblioteca de ícones SVG para melhorar a interface.
+- **Git**: Controle de versão para gerenciar o desenvolvimento.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
