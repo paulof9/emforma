@@ -8,7 +8,7 @@ interface CarrinhoContextType {
   removerProduto: (produto: ProdutoItem) => void;
 }
 
-const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
+export const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
 
 export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [carrinho, setCarrinho] = useState<ProdutoItem[]>([]);
@@ -71,4 +71,4 @@ export function useCarrinho() {
     throw new Error('useCarrinho deve ser usado dentro de um CarrinhoProvider');
   }
   return context;
-}
+};
