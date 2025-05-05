@@ -8,7 +8,7 @@ type CarrinhoContextType = {
   adicionarProduto: (produto: ProdutoItem) => void;
 };
 
-const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
+export const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
 
 // Provider (tornar global o estado do carrinho)
 export const CarrinhoProvider = ({ children }: { children: React.ReactNode }) => {
