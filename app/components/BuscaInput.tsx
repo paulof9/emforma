@@ -1,6 +1,4 @@
 'use client'
-import { Dispatch, SetStateAction } from "react";
-
 interface BuscaInputProps {
   busca: string;
   setBusca: (value: string) => void;

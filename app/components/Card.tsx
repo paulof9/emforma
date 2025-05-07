@@ -1,38 +1,17 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { useCarrinho } from '../context/CarrinhoContext';
-import { ProdutoItem } from '../../types/ProdutoItem'; // Importe o tipo ProdutoItem
-
+import { ProdutoItem } from '../../types/ProdutoItem';
 
 interface CardProps {
-  busca: string;
+  produtos: ProdutoItem[];
 }
 
-export default function Card({ busca }: CardProps) {
+export default function Card({ produtos }: CardProps) {
   const { adicionarProduto } = useCarrinho();
-  const [produtos, setProdutos] = useState<ProdutoItem[]>([]); // Agora está usando o tipo ProdutoItem
-
-  useEffect(() => {
-    async function loadProdutos() {
-      try {
-        const response = await fetch('/api/produtos');
-        const produtosData: ProdutoItem[] = await response.json();
-        setProdutos(produtosData);
-      } catch (error) {
-        console.error('Erro ao carregar produtos:', error);
-      }
-    }
-
-    loadProdutos();
-  }, []);
-
-  const produtosFiltrados = produtos.filter((produto) =>
-    produto.nome.toLowerCase().includes(busca.toLowerCase())
-  );
 
   return (
     <div className="flex flex-wrap justify-center gap-6">
-      {produtosFiltrados.map((produto) => (
+      {produtos.map((produto) => (
         <div key={produto.id} className="bg-white shadow-lg rounded-lg p-6 pb-16 max-w-xs relative">
           <img
             src={produto.imagem}
