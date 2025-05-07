@@ -7,12 +7,6 @@ export default function Carrinho() {
   const calcularTotal = () =>
     carrinho.reduce((total, item) => total + item.valor * item.quantidade, 0);
 
-  const removerProduto = (id: number) => {
-    const novoCarrinho = carrinho.filter((item) => item.id !== id);
-    sessionStorage.setItem('carrinho', JSON.stringify(novoCarrinho));
-    window.location.reload();
-  };
-
   return (
     <div className="p-6 bg-gray-50 min-h-screen text-black">
       <h1 className="text-3xl font-bold mb-6">Carrinho de Compras</h1>
