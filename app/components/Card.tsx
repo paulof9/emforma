@@ -10,7 +10,7 @@ export default function Card({ produtos }: CardProps) {
   const { adicionarProduto } = useCarrinho();
 
   return (
-    <div className="flex flex-wrap justify-center gap-6">
+    <div className="grid grid-cols-3 justify-center gap-6">
       {produtos.map((produto) => (
         <div key={produto.id} className="bg-white shadow-lg rounded-lg p-6 pb-16 max-w-xs relative">
           <img

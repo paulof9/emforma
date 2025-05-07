@@ -1,25 +1,32 @@
 'use client';
-// Hook!
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { ProdutoItem } from '../../types/ProdutoItem';
-import { getProdutos } from '../data/mysql';
 
-type CarrinhoContextType = {
+interface CarrinhoContextType {
   carrinho: ProdutoItem[];
   adicionarProduto: (produto: ProdutoItem) => void;
-};
+}
 
-export const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
+const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
 
-// Provider (tornar global o estado do carrinho)
-export const CarrinhoProvider = ({ children }: { children: React.ReactNode }) => {
+export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [carrinho, setCarrinho] = useState<ProdutoItem[]>([]);
 
-  const adicionarProduto = (produto: ProdutoItem) => {
-    const produtoExistente = carrinho.find((item) => item.id === produto.id);
-    if (produtoExistente) return;
+  // Carrega carrinho do sessionStorage APÓS renderizar no cliente
+  useEffect(() => {
+    const storedCarrinho = sessionStorage.getItem('carrinho');
+    if (storedCarrinho) {
+      setCarrinho(JSON.parse(storedCarrinho));
+    }
+  }, []);
 
-    setCarrinho([...carrinho, { ...produto, quantidade: 1 }]);
+  // Salva no sessionStorage sempre que o carrinho mudar
+  useEffect(() => {
+    sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
+  }, [carrinho]);
+
+  const adicionarProduto = (produto: ProdutoItem) => {
+    setCarrinho((prev) => [...prev, produto]);
   };
 
   return (
@@ -27,12 +34,12 @@ export const CarrinhoProvider = ({ children }: { children: React.ReactNode }) =>
       {children}
     </CarrinhoContext.Provider>
   );
-};
+}
 
-export const useCarrinho = () => {
+export function useCarrinho() {
   const context = useContext(CarrinhoContext);
   if (!context) {
-    throw new Error('useCarrinho deve ser usado com CarrinhoProvider');
+    throw new Error('useCarrinho deve ser usado dentro de um CarrinhoProvider');
   }
   return context;
-};
+}

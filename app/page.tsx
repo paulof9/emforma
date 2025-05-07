@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import Card from './components/Card';
 import BuscaInput from './components/BuscaInput';
@@ -7,25 +8,34 @@ import Paginacao from './components/Paginacao';
 
 export default function Home() {
   const [produtos, setProdutos] = useState<ProdutoItem[]>([]);
-  const [busca, setBusca] = useState("");
-  const [paginaAtual, setPaginaAtual] = useState<number>(() => {
+  const [busca, setBusca] = useState('');
+  const [paginaAtual, setPaginaAtual] = useState(1);
+
+  const itensPorPagina: number = 6;
+
+  // Carregar página salva no sessionStorage (apenas no cliente)
+  useEffect(() => {
     const storedPage = sessionStorage.getItem('homePage');
-    return storedPage ? parseInt(storedPage, 10) : 1;
-  });
+    if (storedPage) {
+      setPaginaAtual(parseInt(storedPage, 10));
+    }
 
-  const itensPorPagina: number = 10;
+    const storedBusca = sessionStorage.getItem('BuscaInput');
+    if (storedBusca) {
+      setBusca(storedBusca);
+    }
+  }, []);
 
- // --SessionStorage--
-  // Salvar a página atual no sessionStorage
+  // Salvar busca e página atual no sessionStorage
   useEffect(() => {
     sessionStorage.setItem('BuscaInput', busca);
   }, [busca]);
-  // Atualizar página atual
+
   useEffect(() => {
     sessionStorage.setItem('homePage', String(paginaAtual));
   }, [paginaAtual]);
 
-  // Carregar produtos do banco de dados
+  // Carregar produtos
   useEffect(() => {
     async function loadProdutos() {
       try {
@@ -40,27 +50,26 @@ export default function Home() {
     loadProdutos();
   }, []);
 
-  // Ordenação em ordem alfabetica por padrão
+  // Ordenação alfabética (padrão)
   const produtosOrdenados = [...produtos].sort((a, b) =>
     (a.nome || '').toLowerCase().localeCompare((b.nome || '').toLowerCase())
   );
+
+  // Filtro por busca
   const produtosFiltrados = produtosOrdenados.filter((produto) =>
     produto.nome.toLowerCase().includes(busca.toLowerCase())
   );
 
-// Ajustar a página atual caso o número de páginas tenha mudado
+  // Paginação
   const totalPaginas = Math.ceil(produtosFiltrados.length / itensPorPagina);
+
   useEffect(() => {
-    if (produtos.length === 0) return;
-
-    const maxPagina = Math.max(1, totalPaginas);
-    if (paginaAtual > maxPagina) {
-      setPaginaAtual(maxPagina);
+    if (paginaAtual > totalPaginas && totalPaginas > 0) {
+      setPaginaAtual(totalPaginas);
     }
-  }, [totalPaginas, paginaAtual, produtos]);
+  }, [totalPaginas, paginaAtual]);
 
-  // Calcular o índice inicial para a páginação
-  const indiceInicial = Math.max(0, (paginaAtual - 1)) * itensPorPagina;
+  const indiceInicial = (paginaAtual - 1) * itensPorPagina;
   const produtosPaginados = produtosFiltrados.slice(indiceInicial, indiceInicial + itensPorPagina);
 
   return (
@@ -68,7 +77,11 @@ export default function Home() {
       <BuscaInput busca={busca} setBusca={setBusca} />
       <h1 className="text-4xl font-bold mb-6 text-black">Produtos</h1>
       <Card produtos={produtosPaginados} />
-      <Paginacao paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} totalPaginas={totalPaginas} />
+      <Paginacao
+        paginaAtual={paginaAtual}
+        setPaginaAtual={setPaginaAtual}
+        totalPaginas={totalPaginas}
+      />
     </main>
   );
 }
