@@ -5,6 +5,7 @@ import { ProdutoItem } from '../../types/ProdutoItem';
 interface CarrinhoContextType {
   carrinho: ProdutoItem[];
   adicionarProduto: (produto: ProdutoItem) => void;
+  removerProduto: (produto: ProdutoItem) => void;
 }
 
 const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
@@ -26,11 +27,39 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   }, [carrinho]);
 
   const adicionarProduto = (produto: ProdutoItem) => {
-    setCarrinho((prev) => [...prev, produto]);
+    setCarrinho((prev) => {
+      const produtoExistente = prev.find((item) => item.id === produto.id);
+
+      if (produtoExistente) {
+        if((produtoExistente.quantidade || 0) < produto.quantidade){
+          return prev.map((item) =>
+            item.id === produto.id ? { ...item, quantidade: (item.quantidade || 1) + 1 } : item
+          );
+        }else{
+          // Retorna o valor de antes caso o produto já tenha a quantidade máxima
+          return prev;
+        }
+      } else {
+        return [...prev, { ...produto, quantidade: 1 }];
+      }
+    });
+  };
+
+  // Função para remover um item
+  const removerProduto = (produto: ProdutoItem) => {
+    if(produto.quantidade === 1){
+      setCarrinho((prev) => prev.filter((item) => item.id !== produto.id));
+    }else{
+      setCarrinho((prev) =>
+        prev.map((item) =>
+          item.id === produto.id ? { ...item, quantidade: (item.quantidade || 1) - 1 } : item
+        )
+      );
+    }
   };
 
   return (
-    <CarrinhoContext.Provider value={{ carrinho, adicionarProduto }}>
+    <CarrinhoContext.Provider value={{ carrinho, adicionarProduto, removerProduto }}>
       {children}
     </CarrinhoContext.Provider>
   );
