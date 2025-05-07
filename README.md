@@ -16,11 +16,11 @@ Este repositório é uma versão aprimorada do projeto original [Catálogo Emfor
 
 ## 🚀 Melhorias Planejadas (To-Do)
 
-- [ ] **Interface**: Refinar o design para melhorar a experiência do usuário.
-- [ ] **Banco de Dados**: Migrar os produtos para um banco de dados para facilitar a gestão.
-- [ ] **Seção de Login**: Implementar autenticação para clientes e administradores.
-- [ ] **Finalização do Carrinho**: Direcionar o carrinho para o WhatsApp com os produtos selecionados.
-- [ ] **Melhorias Gerais**: Otimizar o código e adicionar novas funcionalidades.
+- [  ] **Interface**: Refinar o design para melhorar a experiência do usuário.
+- [✅] **Banco de Dados**: Migrar os produtos para um banco de dados para facilitar a gestão.
+- [  ] **Seção de Login**: Implementar autenticação para clientes e administradores.
+- [✅] **Finalização do Carrinho**: Direcionar o carrinho para o WhatsApp com os produtos selecionados.
+- [  ] **Melhorias Gerais**: Otimizar o código e adicionar novas funcionalidades.
 
 ---
 
