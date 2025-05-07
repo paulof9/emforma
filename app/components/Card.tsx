@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useCarrinho } from '../context/CarrinhoContext';
 import { ProdutoItem } from '../../types/ProdutoItem'; // Importe o tipo ProdutoItem
 
+
 interface CardProps {
   busca: string;
 }
@@ -12,7 +13,6 @@ export default function Card({ busca }: CardProps) {
   const [produtos, setProdutos] = useState<ProdutoItem[]>([]); // Agora está usando o tipo ProdutoItem
 
   useEffect(() => {
-    // Função assíncrona para carregar os produtos da API
     async function loadProdutos() {
       try {
         const response = await fetch('/api/produtos');
@@ -24,7 +24,7 @@ export default function Card({ busca }: CardProps) {
     }
 
     loadProdutos();
-  }, []); // Esse efeito é executado uma vez quando o componente é montado
+  }, []);
 
   const produtosFiltrados = produtos.filter((produto) =>
     produto.nome.toLowerCase().includes(busca.toLowerCase())
