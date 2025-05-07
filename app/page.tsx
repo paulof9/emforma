@@ -72,7 +72,19 @@ export default function Home() {
   const indiceInicial = (paginaAtual - 1) * itensPorPagina;
   const produtosPaginados = produtosFiltrados.slice(indiceInicial, indiceInicial + itensPorPagina);
 
+  const itensPorPagina: number = 10;
 
+ // --SessionStorage--
+  // Salvar a página atual no sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('BuscaInput', busca);
+  }, [busca]);
+  // Atualizar página atual
+  useEffect(() => {
+    sessionStorage.setItem('homePage', String(paginaAtual));
+  }, [paginaAtual]);
+
+  // Carregar produtos do banco de dados
   useEffect(() => {
     async function loadProdutos() {
       try {
@@ -91,16 +103,31 @@ export default function Home() {
   const produtosOrdenados = [...produtos].sort((a, b) =>
     (a.nome || '').toLowerCase().localeCompare((b.nome || '').toLowerCase())
   );
-
   const produtosFiltrados = produtosOrdenados.filter((produto) =>
     produto.nome.toLowerCase().includes(busca.toLowerCase())
   );
+
+// Ajustar a página atual caso o número de páginas tenha mudado
+  const totalPaginas = Math.ceil(produtosFiltrados.length / itensPorPagina);
+  useEffect(() => {
+    if (produtos.length === 0) return;
+
+    const maxPagina = Math.max(1, totalPaginas);
+    if (paginaAtual > maxPagina) {
+      setPaginaAtual(maxPagina);
+    }
+  }, [totalPaginas, paginaAtual, produtos]);
+
+  // Calcular o índice inicial para a páginação
+  const indiceInicial = Math.max(0, (paginaAtual - 1)) * itensPorPagina;
+  const produtosPaginados = produtosFiltrados.slice(indiceInicial, indiceInicial + itensPorPagina);
 
   return (
     <main className="flex flex-col items-center bg-gray-50 min-h-screen p-6">
       <BuscaInput busca={busca} setBusca={setBusca} />
       <h1 className="text-4xl font-bold mb-6 text-black">Produtos</h1>
-      <Card busca={busca} />
+      <Card produtos={produtosPaginados} />
+      <Paginacao paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} totalPaginas={totalPaginas} />
     </main>
   );
 }
