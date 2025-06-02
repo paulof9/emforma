@@ -39,27 +39,37 @@ export default function Home() {
   useEffect(() => {
     async function loadProdutos() {
       try {
-        const response = await fetch('/api/produtos');
+        const response = await fetch('/api/produtos')
   
         if (!response.ok) {
-          throw new Error(`Erro na API: ${response.status}`);
+          // se houver erro tentando obter os produtos
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch (e) {
+            // Se != JSON ou houve outro erro ao parsear
+            errorData = { error: `Erro na API: ${response.status} ${response.statusText}` };
+          }
+          console.error('Erro na resposta da API:', errorData);
+          throw new Error(errorData.error || `Erro na API: ${response.status}`);
         }
   
         const data = await response.json();
   
         if (!Array.isArray(data)) {
-          throw new Error('Resposta da API não é um array');
+          console.error('Resposta da API não é um array:', data);
+          throw new Error('Formato de dados inválido da API');
         }
   
         setProdutos(data);
       } catch (error) {
         console.error('Erro ao carregar produtos:', error);
-        setProdutos([]); // Evita que produtos fique undefined
+        setProdutos([]); // Mantém produtos como um array vazio em caso de erro
       }
     }
   
     loadProdutos();
-  }, []);
+  }, []); // Roda uma vez ao montar o componente
   
 
   // Ordenação alfabética (padrão)

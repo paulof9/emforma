@@ -1,20 +1,40 @@
-import { PrismaClient } from '@prisma/client';
+// app/api/produtos/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { queryDatabase } from '@/lib/mysql';
+import { ProdutoItem } from '@/types/ProdutoItem';
 
-const prisma = new PrismaClient();
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const produtos = await prisma.produto.findMany();
-    return new Response(JSON.stringify(produtos), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Erro ao buscar produtos' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } finally {
-    await prisma.$disconnect();
+    // Busca todos os produtos.
+    const sql = 'SELECT id, imagem, valor, nome, descricao, quantidade, categoria FROM Produto';
+    const rawProdutos = await queryDatabase(sql);
+
+    const produtos: ProdutoItem[] = (rawProdutos as any[]).map(row => ({
+      id: row.id,
+      imagem: row.imagem,
+      valor: typeof row.valor === 'string' ? parseFloat(row.valor) : Number(row.valor), // DECIMAL pode vir como string
+      nome: row.nome,
+      descricao: row.descricao,
+      quantidade: parseInt(row.quantidade, 10),
+      categoria: row.categoria,
+    }));
+
+    return NextResponse.json(produtos, { status: 200 });
+
+  } catch (error: any) {
+    console.error('Erro na API ao buscar produtos:', error.message);
+    let errorMessage = 'Erro interno do servidor ao buscar produtos.';
+    let statusCode = 500;
+
+    if (error.code) { 
+        errorMessage = `Erro no banco de dados: ${error.message}`;
+    } else if (error.message.includes("Pool de conexões MySQL não está disponível")) {
+        errorMessage = error.message;
+        statusCode = 503; // Service Unavailable
+    }
+
+    return NextResponse.json({ error: errorMessage, details: error.message }, { status: statusCode });
   }
 }
+
+export const dynamic = 'force-dynamic';
