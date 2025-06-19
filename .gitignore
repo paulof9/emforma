@@ -33,3 +33,4 @@ Thumbs.db
 .idea/
 *.swpnode_modules/
 /lib/generated/prisma
+
