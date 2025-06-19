@@ -30,6 +30,7 @@ export default function RootLayout({
   const footer = <Footer />;
   
   return (
+  
     <html lang="pt-br">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       <CarrinhoProvider>

@@ -13,7 +13,7 @@ const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined
 export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [carrinho, setCarrinho] = useState<ProdutoItem[]>([]);
 
-  // Carrega carrinho do sessionStorage APÓS renderizar no cliente
+  // carrega carrinho do sessionStorage APÓS renderizar no cliente
   useEffect(() => {
     const storedCarrinho = sessionStorage.getItem('carrinho');
     if (storedCarrinho) {
@@ -21,7 +21,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Salva no sessionStorage sempre que o carrinho mudar
+  // salva no sessionStorage sempre que o carrinho mudar
   useEffect(() => {
     sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
   }, [carrinho]);

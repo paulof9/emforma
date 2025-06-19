@@ -1,9 +1,9 @@
 'use client'
+
 interface BuscaInputProps {
   busca: string;
   setBusca: (value: string) => void;
 }
-
 export default function BuscaInput({ busca, setBusca }: BuscaInputProps) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBusca(event.target.value);

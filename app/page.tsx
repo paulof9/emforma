@@ -5,105 +5,94 @@ import Card from './components/Card';
 import BuscaInput from './components/BuscaInput';
 import { ProdutoItem } from '../types/ProdutoItem';
 import Paginacao from './components/Paginacao';
+import { useDebounce } from '../hooks/useDebounce';
+import { PaginacaoInfo } from '../types/PaginacaoInfo';
 
 export default function Home() {
   const [produtos, setProdutos] = useState<ProdutoItem[]>([]);
+  const [paginacao, setPaginacao] = useState<PaginacaoInfo | null>(null);
   const [busca, setBusca] = useState('');
   const [paginaAtual, setPaginaAtual] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const itensPorPagina: number = 6;
+  
+  // evita chamadas excessivas à API enquanto o usuário digita
+  const debouncedBusca = useDebounce(busca, 500); // 500ms de espera
 
-  // Carregar página salva no sessionStorage (apenas no cliente)
+  // sessionStorage
   useEffect(() => {
     const storedPage = sessionStorage.getItem('homePage');
-    if (storedPage) {
-      setPaginaAtual(parseInt(storedPage, 10));
-    }
-
+    if (storedPage) setPaginaAtual(parseInt(storedPage, 10));
     const storedBusca = sessionStorage.getItem('BuscaInput');
-    if (storedBusca) {
-      setBusca(storedBusca);
-    }
+    if (storedBusca) setBusca(storedBusca);
   }, []);
 
-  // Salvar busca e página atual no sessionStorage
   useEffect(() => {
     sessionStorage.setItem('BuscaInput', busca);
+    // Reinicia para a página 1 ao fazer uma nova busca
+    if (busca !== sessionStorage.getItem('BuscaInput')) {
+      setPaginaAtual(1);
+    }
   }, [busca]);
 
   useEffect(() => {
     sessionStorage.setItem('homePage', String(paginaAtual));
   }, [paginaAtual]);
 
-  // Carregar produtos
+  // carrega sempre que a página ou a busca mudar
   useEffect(() => {
     async function loadProdutos() {
+      setLoading(true);
       try {
-        const response = await fetch('/api/produtos')
+        // URL com parâmetros dinâmicos
+        const params = new URLSearchParams({
+          page: String(paginaAtual),
+          limit: String(itensPorPagina),
+          busca: debouncedBusca,
+        });
+        const response = await fetch(`/api/produtos?${params.toString()}`);
   
         if (!response.ok) {
-          // se houver erro tentando obter os produtos
-          let errorData;
-          try {
-            errorData = await response.json();
-          } catch (e) {
-            // Se != JSON ou houve outro erro ao parsear
-            errorData = { error: `Erro na API: ${response.status} ${response.statusText}` };
-          }
-          console.error('Erro na resposta da API:', errorData);
-          throw new Error(errorData.error || `Erro na API: ${response.status}`);
+          throw new Error('Falha ao carregar os dados da API.');
         }
   
         const data = await response.json();
   
-        if (!Array.isArray(data)) {
-          console.error('Resposta da API não é um array:', data);
-          throw new Error('Formato de dados inválido da API');
-        }
-  
-        setProdutos(data);
+        // atualiza com os dados recebidos da api
+        setProdutos(data.produtos);
+        setPaginacao(data.paginacao);
+
       } catch (error) {
         console.error('Erro ao carregar produtos:', error);
-        setProdutos([]); // Mantém produtos como um array vazio em caso de erro
+        setProdutos([]); // Limpa os produtos em caso de erro
+      } finally {
+        setLoading(false);
       }
     }
   
     loadProdutos();
-  }, []); // Roda uma vez ao montar o componente
-  
-
-  // Ordenação alfabética (padrão)
-  const produtosOrdenados = [...produtos].sort((a, b) =>
-    (a.nome || '').toLowerCase().localeCompare((b.nome || '').toLowerCase())
-  );
-
-  // Filtro por busca
-  const produtosFiltrados = produtosOrdenados.filter((produto) =>
-    produto.nome.toLowerCase().includes(busca.toLowerCase())
-  );
-
-  // Paginação
-  const totalPaginas = Math.ceil(produtosFiltrados.length / itensPorPagina);
-
-  useEffect(() => {
-    if (paginaAtual > totalPaginas && totalPaginas > 0) {
-      setPaginaAtual(totalPaginas);
-    }
-  }, [totalPaginas, paginaAtual]);
-
-  const indiceInicial = (paginaAtual - 1) * itensPorPagina;
-  const produtosPaginados = produtosFiltrados.slice(indiceInicial, indiceInicial + itensPorPagina);
+  }, [paginaAtual, debouncedBusca, itensPorPagina]); // Dependências que disparam a busca
 
   return (
     <main className="flex flex-col items-center bg-gray-50 min-h-screen p-6">
       <BuscaInput busca={busca} setBusca={setBusca} />
       <h1 className="text-4xl font-bold mb-6 text-black">Produtos</h1>
-      <Card produtos={produtosPaginados} />
-      <Paginacao
-        paginaAtual={paginaAtual}
-        setPaginaAtual={setPaginaAtual}
-        totalPaginas={totalPaginas}
-      />
+      
+      {loading ? (
+        <p>Carregando...</p>
+      ) : (
+        <>
+          <Card produtos={produtos} />
+          {paginacao && paginacao.totalDeItens > 0 && (
+            <Paginacao
+              paginaAtual={paginaAtual}
+              setPaginaAtual={setPaginaAtual}
+              totalPaginas={paginacao.totalDePaginas}
+            />
+          )}
+        </>
+      )}
     </main>
   );
 }

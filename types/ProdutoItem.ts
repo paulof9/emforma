@@ -1,4 +1,6 @@
-export interface ProdutoItem {
+import { RowDataPacket } from 'mysql2';
+
+export interface ProdutoItem extends RowDataPacket {
   id: number;
   imagem: string;
   valor: number;

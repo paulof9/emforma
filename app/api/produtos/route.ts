@@ -1,40 +1,77 @@
-// app/api/produtos/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { queryDatabase } from '@/lib/mysql';
 import { ProdutoItem } from '@/types/ProdutoItem';
+import { RowDataPacket } from 'mysql2';
+
+interface TotalCount extends RowDataPacket {
+  total: number;
+}
 
 export async function GET(request: NextRequest) {
   try {
-    // Busca todos os produtos.
-    const sql = 'SELECT id, imagem, valor, nome, descricao, quantidade, categoria FROM Produto';
-    const rawProdutos = await queryDatabase(sql);
+    // le parametros (ex.: /api/produtos?page=2&busca=tenis)
+    const { searchParams } = request.nextUrl;
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '20', 10);
+    const busca = searchParams.get('busca') || ''; 
 
-    const produtos: ProdutoItem[] = (rawProdutos as any[]).map(row => ({
-      id: row.id,
-      imagem: row.imagem,
-      valor: typeof row.valor === 'string' ? parseFloat(row.valor) : Number(row.valor), // DECIMAL pode vir como string
-      nome: row.nome,
-      descricao: row.descricao,
-      quantidade: parseInt(row.quantidade, 10),
-      categoria: row.categoria,
-    }));
-
-    return NextResponse.json(produtos, { status: 200 });
-
-  } catch (error: any) {
-    console.error('Erro na API ao buscar produtos:', error.message);
-    let errorMessage = 'Erro interno do servidor ao buscar produtos.';
-    let statusCode = 500;
-
-    if (error.code) { 
-        errorMessage = `Erro no banco de dados: ${error.message}`;
-    } else if (error.message.includes("Pool de conexões MySQL não está disponível")) {
-        errorMessage = error.message;
-        statusCode = 503; // Service Unavailable
+    // VALIDAÇÃO BÁSICA
+    if (page < 1 || limit < 1) {
+      return NextResponse.json({ error: 'Parâmetros de paginação inválidos.' }, { status: 400 });
     }
 
-    return NextResponse.json({ error: errorMessage, details: error.message }, { status: statusCode });
+    // ve a pagina para buscar (ex.: na página 2 de 10 itens, o offset é 10)
+    const offset = (page - 1) * limit;
+    // filtro da pesquisa
+    const searchTerm = `%${busca}%`; 
+    const searchCondition = 'WHERE nome LIKE ?';
+
+    // busca os produtos
+    const produtosQuery = `
+      SELECT id, imagem, valor, nome, descricao, quantidade, categoria 
+      FROM produtos 
+      ${searchCondition}
+      ORDER BY nome ASC
+      LIMIT ? OFFSET ?
+    `;
+    
+    // número total de produtos
+    const totalSql = `
+      SELECT COUNT(*) as total 
+      FROM produtos 
+      ${searchCondition}
+    `;
+
+    // buscar produtos e contar total
+    const [produtosResult, totalResult] = await Promise.all([
+      queryDatabase<ProdutoItem[]>(produtosQuery, [searchTerm, limit, offset]),
+      queryDatabase<TotalCount[]>(totalSql, [searchTerm])
+    ]);
+
+    const totalProdutos = totalResult[0]?.total || 0;
+
+    // garante que o campo `valor` seja sempre um float
+    const produtos: ProdutoItem[] = produtosResult.map(produto => ({
+      ...produto,
+      valor: typeof produto.valor === 'string' ? parseFloat(produto.valor) : Number(produto.valor),
+    }));
+
+    // infos pro front
+    return NextResponse.json({
+      produtos,
+      paginacao: {
+        paginaAtual: page,
+        itensPorPagina: limit,
+        totalDeItens: totalProdutos,
+        totalDePaginas: Math.ceil(totalProdutos / limit)
+      }
+    }, { status: 200 });
+
+  } catch (error) {
+    console.error('Erro na rota GET /api/produtos:', error);
+    return NextResponse.json({ error: 'Erro interno ao buscar produtos.' }, { status: 500 });
   }
 }
 
+// instrui o Next.js a sempre executar esta rota no servidor para toda req.
 export const dynamic = 'force-dynamic';
