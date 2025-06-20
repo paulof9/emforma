@@ -12,6 +12,28 @@ const dbConfig = {
   dateStrings: true,
 };
 
+export interface OkPacket {
+  affectedRows: number;
+  insertId: number;
+  changedRows: number;
+}
+
+export async function executeActionQuery(sql: string, params: any[] = []): Promise<OkPacket> {
+  let connection;
+  try {
+    connection = await pool.getConnection();
+    // a função query do mysql2 retorna um array [result, fields]
+    const [result] = await connection.query(sql, params);
+    return result as OkPacket;
+  } catch (error) {
+    console.error('Erro ao executar ação no banco de dados:', error);
+    throw error;
+  } finally {
+    if (connection) connection.release();
+  }
+}
+
+
 // evita race conditions pois cria-se a pool apenas uma vez
 const pool: Pool = mysql.createPool(dbConfig);
 
