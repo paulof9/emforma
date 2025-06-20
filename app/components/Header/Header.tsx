@@ -96,7 +96,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/login" className="hover:text-gray-300">Login</Link>
+              <Link href="/login" className="hover:text-gray-300">Entrar</Link>
               <Link href="/register" className="hover:text-gray-300">Registrar</Link>
             </>
           )}

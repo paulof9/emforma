@@ -53,17 +53,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-gradient-to-t from-[var(--roxo-fade)] to-[var(--roxo)] min-h-screen flex flex-col items-center justify-center">
-      <main className="bg-white min-w-lg mx-auto p-8 md:p-12 rounded-lg shadow-2xl w-full max-w-md">
+    <div className="bg-gradient-to-t from-[var(--roxo-fade)] to-[var(--roxo)] min-h-screen flex flex-col items-center justify-center px-4">
+      <main className="bg-white mx-auto p-8 md:p-12 rounded-lg shadow-2xl w-full max-w-md">
         <section>
-          <h3 className="font-bold text-2xl text-black">Welcome to Startup</h3>
-          <p className="text-gray-600 pt-2">Sign in to your account.</p>
+          <h3 className="font-bold text-2xl text-black">Bem vindo(a) Emforma</h3>
+          <p className="text-gray-600 pt-2">Acesse sua conta.</p>
         </section>
 
         <section className="mt-10">
           <form className="flex flex-col" onSubmit={handleSubmit}>
             <div className="mb-6 pt-3 rounded bg-gray-200">
-              <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="email">Email</label>
+              <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="email">
+                Email
+              </label>
               <input
                 type="email"
                 id="email"
@@ -74,7 +76,9 @@ export default function LoginPage() {
               />
             </div>
             <div className="mb-6 pt-3 rounded bg-gray-200">
-              <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="password">Password</label>
+              <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="password">
+                Senha
+              </label>
               <input
                 type="password"
                 id="password"
@@ -86,11 +90,12 @@ export default function LoginPage() {
             </div>
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <div className="flex justify-end">
-              {/* fazer ainda */}
-              <a href="#" className="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6">Forgot your password?</a>
+              <a href="#" className="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6">
+                Esqueceu sua senha?
+              </a>
             </div>
             <button
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 disabled:opacity-50 cursor-pointer"
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               type="submit"
               disabled={isLoading}
             >
@@ -102,8 +107,11 @@ export default function LoginPage() {
 
       <div className="max-w-lg mx-auto text-center mt-12 mb-6">
         <p className="text-white">
-          Don't have an account?{' '}
-          <a href="/register" className="font-bold hover:underline">Sign up</a>.
+          Não possui uma conta?{' '}
+          <a href="/register" className="font-bold hover:underline">
+            Inscreva-se
+          </a>
+          .
         </p>
       </div>
     </div>

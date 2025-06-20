@@ -62,19 +62,18 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="bg-gradient-to-t from-[var(--roxo-fade)] to-[var(--roxo)] min-h-screen flex flex-col items-center justify-center">
-      <main className="bg-white min-w-lg mx-auto p-8 md:p-12 rounded-lg shadow-2xl w-full max-w-md">
+    <div className="bg-gradient-to-t from-[var(--roxo-fade)] to-[var(--roxo)] min-h-screen flex flex-col items-center justify-center px-4">
+      <main className="bg-white mx-auto p-8 md:p-12 rounded-lg shadow-2xl w-full max-w-md">
         <section>
-          <h3 className="font-bold text-2xl text-black">Create your Account</h3>
-          <p className="text-gray-600 pt-2">Get started by creating your account.</p>
+          <h3 className="font-bold text-2xl text-black">Crie sua conta</h3>
+          <p className="text-gray-600 pt-2">Preencha com suas informações.</p>
         </section>
 
         <section className="mt-10">
           <form className="flex flex-col" onSubmit={handleSubmit}>
-            {/* Campo Nome */}
             <div className="mb-6 pt-3 rounded bg-gray-200">
-              <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="nanomeme">
-                Full Name
+              <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="nome">
+                Nome completo
               </label>
               <input
                 type="text"
@@ -86,7 +85,7 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Campo Email */}
+            {/* Email */}
             <div className="mb-6 pt-3 rounded bg-gray-200">
               <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="email">
                 Email
@@ -101,10 +100,10 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Campo Senha */}
+            {/* Senha */}
             <div className="mb-6 pt-3 rounded bg-gray-200">
               <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="password">
-                Password
+                Senha
               </label>
               <input
                 type="password"
@@ -116,10 +115,10 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Campo Confirmar Senha */}
+            {/* Confirmar Senha */}
             <div className="mb-6 pt-3 rounded bg-gray-200">
               <label className="block text-gray-700 text-sm font-bold mb-2 ml-3" htmlFor="confirmPassword">
-                Confirm Password
+                Confirmar senha
               </label>
               <input
                 type="password"
@@ -133,13 +132,12 @@ export default function RegisterPage() {
 
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-            {/* Botão de Registro */}
             <button
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 disabled:opacity-50 cursor-pointer"
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               type="submit"
               disabled={isLoading}
             >
-              {isLoading ? 'Creating Account...' : 'Sign Up'}
+              {isLoading ? 'Criando conta...' : 'Criar conta!'}
             </button>
           </form>
         </section>
@@ -147,10 +145,9 @@ export default function RegisterPage() {
 
       <div className="max-w-lg mx-auto text-center mt-12 mb-6">
         <p className="text-white">
-          Already have an account?{' '}
-
+          Já possui uma conta?{' '}
           <a href="/login" className="font-bold hover:underline">
-            Sign In
+            Entrar
           </a>
           .
         </p>
