@@ -8,8 +8,6 @@ export async function GET(request: NextRequest) {
   
   const token = request.cookies.get('authToken')?.value;
 
-  console.log('SEGREDO USADO PARA VERIFICAR (no /me):', process.env.JWT_SECRET);
-
   if (!token) {
     return NextResponse.json({ isLoggedIn: false, message: 'Nenhum token fornecido.' }, { status: 401 });
   }

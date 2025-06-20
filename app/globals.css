@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --roxo: #40348c;
+  --roxo-fade: #332a70;
 }
 
 @theme inline {

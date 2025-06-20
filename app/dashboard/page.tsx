@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import  { UserData } from '@/types/userDate';
-
+import { MoonLoader } from "react-spinners"; 
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -65,8 +65,8 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-xl text-gray-700">Carregando seu painel...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-[var(--roxo-fade)] to-[var(--roxo)]">
+        <MoonLoader color={"#ffffff"}/>
       </div>
     );
   }
@@ -97,7 +97,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-t from-[var(--roxo-fade)] to-[var(--roxo)] flex flex-col items-center justify-center p-4">
       <div className="bg-white shadow-2xl rounded-xl p-8 md:p-12 w-full max-w-lg transform transition-all duration-500 ease-in-out">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
           Meu Painel
@@ -130,7 +130,7 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-        
+
         <button
           onClick={handleLogout}
           className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md
@@ -140,9 +140,6 @@ export default function DashboardPage() {
           Logout
         </button>
       </div>
-      <footer className="mt-10 text-center text-gray-400 text-sm">
-        <p>&copy; {new Date().getFullYear()} Minha Loja. Todos os direitos reservados.</p>
-      </footer>
     </div>
   );
 }

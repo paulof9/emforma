@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { FaUser, FaShoppingCart } from "react-icons/fa";
+import Image from 'next/image';
 
 export default function Navbar() {
   const router = useRouter();
@@ -60,9 +61,17 @@ export default function Navbar() {
   };
 
   return (
-     <nav className="bg-gray-800 text-white p-4">
+     <nav className="bg-[var(--roxo)] text-white p-4">
       <div className="container mx-auto flex flex-row justify-between items-center">
-        <Link href="/" className="text-xl font-bold">Minha Loja</Link>
+        <Link href="/" className="text-xl font-bold">
+        <Image
+          src="/logo.png"
+          alt="Emforma Sports Logo"
+          width={150}
+          height={40}
+          className="inline-block mr-2"
+        />
+        </Link>
 
         <div className="flex items-center gap-x-4">
           {isLoggedIn ? (

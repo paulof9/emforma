@@ -62,7 +62,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-purple-500 to-blue-500 min-h-screen flex flex-col items-center justify-center">
+    <div className="bg-gradient-to-t from-[var(--roxo-fade)] to-[var(--roxo)] min-h-screen flex flex-col items-center justify-center">
       <main className="bg-white min-w-lg mx-auto p-8 md:p-12 rounded-lg shadow-2xl w-full max-w-md">
         <section>
           <h3 className="font-bold text-2xl text-black">Create your Account</h3>
@@ -135,7 +135,7 @@ export default function RegisterPage() {
 
             {/* Botão de Registro */}
             <button
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 disabled:opacity-50"
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 disabled:opacity-50 cursor-pointer"
               type="submit"
               disabled={isLoading}
             >

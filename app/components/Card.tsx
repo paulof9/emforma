@@ -22,7 +22,7 @@ export default function Card({ produtos }: CardProps) {
           <p className="text-gray-700 mt-1">{produto.descricao}</p>
           <p className="text-green-600 font-semibold mt-1">R$ {produto.valor.toFixed(2)}</p>
           <button
-            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded w-fit hover:bg-blue-600 transition-all absolute bottom-4 left-4 right-4"
+            className="mt-4 bg-[var(--roxo)] text-white py-2 px-4 rounded w-fit hover:bg-[var(--roxo-fade)] transition-all absolute bottom-4 left-4 right-4 cursor-pointer"
             onClick={() => adicionarProduto(produto)}
           >
             Adicionar ao carrinho

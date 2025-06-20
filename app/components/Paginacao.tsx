@@ -11,7 +11,7 @@ export default function Paginacao({ paginaAtual, setPaginaAtual, totalPaginas }:
       <button
         onClick={() => setPaginaAtual((prev) => Math.max(prev - 1, 1))}
         disabled={paginaAtual === 1}
-        className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+        className="px-4 py-2 bg-[var(--roxo)] text-white rounded disabled:opacity-50"
       >
         Anterior
       </button>
@@ -19,7 +19,7 @@ export default function Paginacao({ paginaAtual, setPaginaAtual, totalPaginas }:
       <button
         onClick={() => setPaginaAtual((prev) => Math.min(prev + 1, totalPaginas))}
         disabled={paginaAtual === totalPaginas}
-        className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+        className="px-4 py-2 bg-[var(--roxo)] text-white rounded disabled:opacity-50"
       >
         Próxima
       </button>
